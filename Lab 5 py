@@ -1,0 +1,76 @@
+# part 1
+
+import numpy as np
+import matplotlib . pyplot as plt
+import scipy . signal as sig
+
+steps = 1e-6 # Define step size
+t = np. arange (0, 1.2e-3 + steps , steps ) 
+R = 1e3
+L= 27e-3
+C= 100e-9
+
+# user defined function
+def step (t): 
+    y = np. zeros (t. shape ) 
+    for i in range ( len (t)): 
+        if t[i] >= 0:  
+            y[i] = 1
+        else:
+            y[i] = 0
+    return y 
+
+def h(R, L, C, t):
+    Alpha = -1 / (2 * R * C)
+    w = 0.5 * np.sqrt(((1/(R*C))**2) - 4/(L*C) + 0*1j)
+    P = Alpha + w 
+    g = P / (R*C)
+    gMag = np.abs(g)
+    gRad = np.angle(g)
+    y = (gMag / np.abs(w)) * np.exp(Alpha*t) * np.sin(np.abs(w) * t + gRad) * step (t) 
+    return y
+
+num = [0, 1e4 , 0]
+den = [1, 1e4 , 370.4e6]
+tout, hout = sig. impulse (( num , den), T = t)
+
+plt. figure ( figsize = (10 , 7))
+plt. subplot (2, 1, 1)
+plt. plot (t, h(R, L, C, t))
+plt. grid ()
+plt. ylabel ('h1(t)')
+plt. title (' Impulse responce')
+plt. subplot (2, 1, 2)
+plt. plot (tout, hout)
+plt. grid ()
+plt. ylabel ('h2(t)')
+plt. xlabel ('t')
+
+plt. show ()
+
+
+# part 2 
+import numpy as np
+import matplotlib . pyplot as plt
+import scipy . signal as sig
+
+steps = 1e-6 # Define step size
+t = np. arange (0, 1.2e-3 + steps , steps ) 
+
+
+num = [0, 1e4 , 0]
+den = [1, 1e4 , 370.4e6]
+tout, yout = sig. step (( num , den), T = t)
+
+plt. figure ( figsize = (10 , 7))
+plt. plot (tout, yout)
+plt. grid ()
+plt. title (' Step responce')
+plt. ylabel ('y(t)')
+plt. xlabel ('t')
+
+plt. show ()
+
+
+
+
